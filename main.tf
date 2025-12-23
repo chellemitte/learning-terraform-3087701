@@ -25,7 +25,7 @@ resource "aws_instance" "blog" {
   vpc_security_group_ids = [aws_security_group.blog.id]
 
   tags = {
-    Name = "HelloWorld"
+    name = "learning-terraform"
   }
 }
 
@@ -43,7 +43,7 @@ resource "aws_security_group_rule" "blog_http_in" {
   protocol = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 
-  security_group_id = aws.aws_security_group.blog.id
+  security_group_id = aws_security_group.blog.id
 }
 
 resource "aws_security_group_rule" "blog_https_in" {
@@ -53,7 +53,7 @@ resource "aws_security_group_rule" "blog_https_in" {
   protocol = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 
-  security_group_id = aws.aws_security_group.blog.id
+  security_group_id = aws_security_group.blog.id
 }
 
 resource "aws_security_group_rule" "blog_everything_out" {
@@ -63,5 +63,5 @@ resource "aws_security_group_rule" "blog_everything_out" {
   protocol = "-1"
   cidr_blocks = ["0.0.0.0/0"]
 
-  security_group_id = aws.aws_security_group.blog.id
+  security_group_id = aws_security_group.blog.id
 }
