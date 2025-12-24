@@ -71,22 +71,22 @@ module "blog_alb" {
   target_groups = [
     {
       name_prefix      = "blog-"
-      protocol         = "HTTP"
-      port             = 80
+      backend_protocol = "HTTP"   # must be backend_protocol, not protocol
+      backend_port     = 80       # must be backend_port, not port
       target_type      = "instance"
     }
   ]
 
   http_tcp_listeners = [
     {
-      port     = 80
-      protocol = "HTTP"
+      port               = 80
+      protocol           = "HTTP"
+      target_group_index = 0
       redirect = {
         port        = "443"
         protocol    = "HTTPS"
         status_code = "HTTP_301"
       }
-      target_group_index = 0
     }
   ]
 
