@@ -77,8 +77,8 @@ module "blog_alb" {
     }
   ]
 
-  listeners = {
-    ex-http-https-redirect = {
+  http_tcp_listeners = [
+    {
       port     = 80
       protocol = "HTTP"
       redirect = {
@@ -86,8 +86,9 @@ module "blog_alb" {
         protocol    = "HTTPS"
         status_code = "HTTP_301"
       }
+      target_group_index = 0
     }
-  }
+  ]
 
   tags = {
     environment = "dev"
