@@ -38,6 +38,11 @@ resource "aws_launch_template" "blog" {
   name_prefix   = "blog-"
   image_id      = data.aws_ami.app_ami.id
   instance_type = var.instance_type
+
+   network_interfaces {
+    associate_public_ip_address = true
+    security_groups             = [module.blog_sg.security_group_id]
+  }
 }
 
 # Auto Scaling Group
@@ -78,6 +83,14 @@ module "blog_alb" {
       backend_protocol = "HTTP"   # must be backend_protocol, not protocol
       backend_port     = 80       # must be backend_port, not port
       target_type      = "instance"
+      health_check = {
+        path                = "/"
+        matcher             = "200"
+        interval            = 30
+        timeout             = 5
+        healthy_threshold   = 2
+        unhealthy_threshold = 2
+      }
     }
   ]
 
