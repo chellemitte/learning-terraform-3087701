@@ -51,7 +51,7 @@ module "autoscaling" {
 }
 
 resource "aws_autoscaling_attachment" "asg_alb" {
-  autoscaling_group_name = "blog-asg"
+  autoscaling_group_name = module.autoscaling.this_autoscaling_group_name
   lb_target_group_arn   = module.blog_alb.target_group_arns[0]
 
   depends_on = [module.autoscaling]   # <-- ensures ASG exists first
