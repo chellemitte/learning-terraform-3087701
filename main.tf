@@ -34,27 +34,29 @@ module "blog_vpc" {
   }
 }
 
-module "autoscaling" {
-  source  = "terraform-aws-modules/autoscaling/aws"
-  version = "9.0.2"
-
-  name = "blog-asg"
-  min_size = 1
-  max_size = 2
-
-  vpc_zone_identifier = module.blog_vpc.public_subnets
-  security_groups = [module.blog_sg.security_group_id]
-
+resource "aws_launch_template" "blog" {
+  name_prefix   = "blog-"
   image_id      = data.aws_ami.app_ami.id
   instance_type = var.instance_type
-
 }
 
-resource "aws_autoscaling_attachment" "asg_alb" {
-  autoscaling_group_name = module.autoscaling.this_autoscaling_group_names[0]
-  lb_target_group_arn   = module.blog_alb.target_group_arns[0]
+# Auto Scaling Group
+resource "aws_autoscaling_group" "blog_asg" {
+  name                 = "blog-asg"   # fixed, predictable name
+  max_size             = 2
+  min_size             = 1
+  vpc_zone_identifier  = module.blog_vpc.public_subnets
 
-  depends_on = [module.autoscaling]   # <-- ensures ASG exists first
+  launch_template {
+    id      = aws_launch_template.blog.id
+    version = "$Latest"
+  }
+}
+
+# Attach ALB Target Group
+resource "aws_autoscaling_attachment" "asg_alb" {
+  autoscaling_group_name = aws_autoscaling_group.blog_asg.name
+  lb_target_group_arn    = module.blog_alb.target_group_arns[0]
 }
 
 
