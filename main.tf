@@ -53,6 +53,8 @@ module "autoscaling" {
 resource "aws_autoscaling_attachment" "asg_alb" {
   autoscaling_group_name = "blog-asg"
   lb_target_group_arn   = module.blog_alb.target_group_arns[0]
+
+  depends_on = [module.autoscaling]   # <-- ensures ASG exists first
 }
 
 
@@ -89,6 +91,8 @@ module "blog_alb" {
       }
     }
   ]
+
+  enable_deletion_protection = false
 
   tags = {
     environment = "dev"
