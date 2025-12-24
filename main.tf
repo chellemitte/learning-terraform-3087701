@@ -39,7 +39,6 @@ module "autoscaling" {
   version = "9.0.2"
 
   name = "blog-asg"
-  name_prefix = "" 
   min_size = 1
   max_size = 2
 
@@ -52,7 +51,7 @@ module "autoscaling" {
 }
 
 resource "aws_autoscaling_attachment" "asg_alb" {
-  autoscaling_group_name = "blog-asg"
+  autoscaling_group_name = module.autoscaling.this_autoscaling_group_names[0]
   lb_target_group_arn   = module.blog_alb.target_group_arns[0]
 
   depends_on = [module.autoscaling]   # <-- ensures ASG exists first
