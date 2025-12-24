@@ -51,7 +51,7 @@ module "autoscaling" {
 
 }
 
-module "blog-alb" {
+module "blog_alb" {
   source = "terraform-aws-modules/alb/aws"
 
   name    = "blog-ab"
